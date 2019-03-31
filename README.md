@@ -1,4 +1,5 @@
 # bookkeeper
+Keep track of your stocks and its taxes dates and compensation
 
 ## Project setup
 ```
