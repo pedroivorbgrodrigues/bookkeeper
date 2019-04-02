@@ -6,6 +6,9 @@
         <span class="font-weight-light">Keeper</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-btn flat>LOGIN</v-btn>
+      </v-toolbar-items>
     </v-toolbar>
 
     <v-content>
