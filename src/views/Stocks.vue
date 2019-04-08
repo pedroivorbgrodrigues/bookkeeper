@@ -7,32 +7,27 @@
           class="clickable"
           @click.native="selectStock(stock)"
         >
-          <v-container>
-            <v-layout row wrap>
-              <v-flex xs12>
-                <v-img
-                  class="hidden-xs-only"
-                  height="128px"
-                  contain
-                  :src="stock.image"
-                ></v-img>
-                <v-img
-                  class="hidden-sm-and-up"
-                  height="64px"
-                  contain
-                  :src="stock.image"
-                ></v-img>
-              </v-flex>
-              <v-flex xs12 class="text-xs-center">
-                <div class="headline hidden-xs-only">{{ stock.title }}</div>
-                <div class="subheading text-xs-center hidden-sm-and-up">
-                  {{ stock.title }}
-                </div>
-                <div>Vencimento: {{ stock.dueDate }}</div>
-                <div>Preço de Entrada: {{ stock.entryPrice }}</div>
-              </v-flex>
-            </v-layout>
-          </v-container>
+          <v-card-title>
+              <v-layout fill-height>
+                <v-flex xs8 style="align-self: center">
+                  <div class="display-1">{{stock.title}}</div>
+                </v-flex>
+                <v-flex xs4>
+                  <v-img contain max-height="64" :src="stock.image"></v-img>
+                </v-flex>
+              </v-layout>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-list dense>
+            <v-list-tile>
+              <v-list-tile-content>Vencimento:</v-list-tile-content>
+              <v-list-tile-content class="align-end">{{ stock.dueDate }}</v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content>Preço de Entrada:</v-list-tile-content>
+              <v-list-tile-content class="align-end">{{ stock.entryPrice }}</v-list-tile-content>
+            </v-list-tile>
+          </v-list>
         </v-card>
       </v-flex>
     </v-layout>
