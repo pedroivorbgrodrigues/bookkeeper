@@ -3,22 +3,22 @@
     <v-card-title>
       <v-layout fill-height>
         <v-flex xs8 style="align-self: center">
-          <div class="display-1">{{stock.title}}</div>
+          <div class="display-1">
+            {{ stock.title }}
+          </div>
         </v-flex>
         <v-flex xs4>
-          <v-img contain max-height="64" :src="stock.image"></v-img>
+          <v-img contain max-height="64" :src="stock.image" />
         </v-flex>
       </v-layout>
     </v-card-title>
-    <v-divider></v-divider>
+    <v-divider />
     <v-list dense>
-      <v-list-tile>
-        <v-list-tile-content>Vencimento:</v-list-tile-content>
-        <v-list-tile-content class="align-end">{{ stock.dueDate }}</v-list-tile-content>
-      </v-list-tile>
-      <v-list-tile>
-        <v-list-tile-content>Preço de Entrada:</v-list-tile-content>
-        <v-list-tile-content class="align-end">{{ stock.entryPrice }}</v-list-tile-content>
+      <v-list-tile v-for="(label, prop) in listLabels" :key="prop">
+        <v-list-tile-content>{{ label }}:</v-list-tile-content>
+        <v-list-tile-content class="align-end">
+          {{ stock[prop] }}
+        </v-list-tile-content>
       </v-list-tile>
     </v-list>
   </v-card>
@@ -26,7 +26,18 @@
 
 <script>
 export default {
-  name: "stock-card",
+  data() {
+    return {
+      listLabels: {
+        dueDate: "Data de vencimento",
+        entryPrice: "preço de entrada",
+        entryDate: "Quantidade",
+        sellPrice: "Preço de venda",
+        sellDate: "Data de venda"
+      }
+    };
+  },
+  name: "StockCard",
   props: ["stock"]
 };
 </script>

@@ -2,14 +2,14 @@
   <v-container>
     <v-layout row wrap>
       <v-flex xs3 v-for="stock in stocks" :key="stock.title">
-        <stock-card :key="stock.title" v-bind:stock="stock"/>
+        <stock-card :key="stock.title" v-bind:stock="stock" />
       </v-flex>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import StockCard from '../components/StockCard.vue';
+import StockCard from "../components/StockCard.vue";
 export default {
   computed: {
     isSelected() {
@@ -40,7 +40,7 @@ export default {
       ]
     };
   },
-  components: {StockCard}
+  components: { StockCard }
 };
 </script>
 
