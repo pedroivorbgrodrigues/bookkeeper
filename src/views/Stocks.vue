@@ -1,5 +1,16 @@
 <template>
   <v-container>
+    <v-layout row justify-center>
+      <v-flex xs6>
+        <v-form>
+          <v-text-field
+            solo
+            label="Add new stock"
+            append-icon="add"
+          ></v-text-field>
+        </v-form>
+      </v-flex>
+    </v-layout>
     <v-layout row wrap>
       <v-flex xs3 v-for="stock in stocks" :key="stock.title">
         <stock-card :key="stock.title" v-bind:stock="stock" />
