@@ -30,7 +30,7 @@ export default {
     return {
       listLabels: {
         dueDate: "Data de vencimento",
-        entryPrice: "preço de entrada",
+        entryPrice: "Preço de entrada",
         entryDate: "Quantidade",
         sellPrice: "Preço de venda",
         sellDate: "Data de venda"
