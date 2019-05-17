@@ -12,7 +12,7 @@
         </v-form>
       </v-flex>
     </v-layout>
-    <v-layout row wrap>
+    <v-layout row wrap justify-center>
       <v-flex xs4 v-for="category in categories" :key="category.name" px-1>
         <category-card v-bind:category="category" />
       </v-flex>
@@ -31,8 +31,8 @@ export default {
       this.categories.push({
         name: this.nameInput,
         type: "fixedIncome",
-        allocation: 0,
-        stocks: [{ ticker: "", allocation: 0 }]
+        allocation: 1,
+        stocks: [{ ticker: "", allocation: 1 }]
       });
       this.nameInput = "";
     }
