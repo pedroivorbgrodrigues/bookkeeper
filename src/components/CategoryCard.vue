@@ -11,15 +11,10 @@
           ></v-text-field>
         </v-flex>
         <v-flex xs3 text-xs-right>
-          <v-text-field
-            solo
-            flat
-            :value="category.allocation"
-            suffix="%"
-            mask="###"
-            v-on:keydown.up.prevent.stop="increment(category)"
-            v-on:keydown.down.prevent.stop="decrement(category)"
-          ></v-text-field>
+          <AllocationInput
+            v-model="category.allocation"
+            v-bind:ticker="category.ticker"
+          />
         </v-flex>
         <v-flex xs2 text-xs-right>
           <v-icon large color="teal lighten-2"> fas fa-{{ icon }} </v-icon>
@@ -43,18 +38,11 @@
           ></v-text-field>
         </v-flex>
         <v-flex ma-1>
-          <v-text-field
-            label="Allocation"
+          <AllocationInput
             v-model="stock.allocation"
-            :ref="`alllocation_${stock.ticker}`"
-            suffix="%"
-            mask="###"
-            v-on:keydown.tab.exact="addStock(index, $event)"
-            v-on:keydown.up.prevent.stop="increment(stock)"
-            v-on:keydown.down.prevent.stop="decrement(stock)"
-            v-on:blur="keepInBoundary(stock)"
-          >
-          </v-text-field>
+            v-bind:ticker="stock.ticker"
+            v-on:tab="addStock(index)"
+          />
         </v-flex>
       </v-layout>
     </v-form>
@@ -62,6 +50,7 @@
 </template>
 
 <script>
+import AllocationInput from "../components/AllocationInput.vue";
 export default {
   name: "CategoryStock",
   computed: {
@@ -70,7 +59,7 @@ export default {
     }
   },
   methods: {
-    addStock(index, event) {
+    addStock(index) {
       if (index !== this.category.stocks.length - 1) {
         return;
       }
@@ -86,30 +75,11 @@ export default {
         return this.$refs[`alllocation_${currectStock.ticker}`][0].focus();
       }
       this.category.stocks.push({ ticker: "", allocation: "" });
-    },
-    increment(model) {
-      model.allocation =
-        model.allocation >= this.maxAllocation
-          ? this.maxAllocation
-          : model.allocation + 1;
-    },
-    decrement(model) {
-      if (model.allocation > this.minAllocation) {
-        model.allocation--;
-      }
-    },
-    keepInBoundary(model) {
-      model.allocation =
-        model.allocation >= this.maxAllocation
-          ? this.maxAllocation
-          : model.allocation;
     }
   },
   data() {
     return {
       form: false,
-      maxAllocation: 100,
-      minAllocation: 1,
       categoryIcons: {
         fixedIncome: "chart-line"
       },
@@ -119,6 +89,7 @@ export default {
       }
     };
   },
-  props: ["category"]
+  props: ["category"],
+  components: { AllocationInput }
 };
 </script>
