@@ -2,14 +2,14 @@
   <v-text-field
     label="Allocation"
     v-bind:value="value"
-    :ref="`alllocation_${ticker}`"
     suffix="%"
     type="number"
-    min="1"
-    max="100"
+    min="1.00"
+    max="100.00"
     v-on:keydown.tab.exact="$emit('tab', $event)"
     v-on:blur="keepInBoundary"
     v-on:input="$emit('input', $event)"
+    ref="input"
   >
   </v-text-field>
 </template>
@@ -30,6 +30,6 @@ export default {
       minAllocation: 1
     };
   },
-  props: ["value", "ticker"]
+  props: ["value"]
 };
 </script>

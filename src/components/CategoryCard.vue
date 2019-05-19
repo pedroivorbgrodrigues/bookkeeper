@@ -1,22 +1,19 @@
 <template>
   <v-card class="clickable">
     <v-card-title>
-      <v-layout fill-height>
-        <v-flex xs7>
+      <v-layout fill-height align-center>
+        <v-flex xs7 ma-1>
           <v-text-field
-            solo
-            flat
+            label="Category"
             :value="category.name"
+            :ref="category.id"
             class="headline"
           ></v-text-field>
         </v-flex>
-        <v-flex xs3 text-xs-right>
-          <AllocationInput
-            v-model="category.allocation"
-            v-bind:ticker="category.ticker"
-          />
+        <v-flex xs3 text-xs-right ma-1>
+          <AllocationInput v-model="category.allocation" />
         </v-flex>
-        <v-flex xs2 text-xs-right>
+        <v-flex xs2 text-xs-right ma-1>
           <v-icon large color="teal lighten-2"> fas fa-{{ icon }} </v-icon>
         </v-flex>
       </v-layout>
@@ -25,14 +22,17 @@
     <v-form v-model="form" ref="form">
       <v-layout
         fill-height
-        ma-1
+        my-3
+        ml-3
+        mr-1
         v-for="(stock, index) in category.stocks"
         :key="index"
+        align-center
       >
         <v-flex ma-1>
           <v-text-field
             label="Ticker"
-            :ref="stock.ticker"
+            :ref="stock.id"
             v-model="stock.ticker"
             :rules="[rules.length(4)]"
           ></v-text-field>
@@ -40,9 +40,20 @@
         <v-flex ma-1>
           <AllocationInput
             v-model="stock.allocation"
-            v-bind:ticker="stock.ticker"
             v-on:tab="addStock(index)"
+            :ref="`allocation_${stock.id}`"
           />
+        </v-flex>
+        <v-flex>
+          <v-btn
+            flat
+            icon
+            class="delete"
+            :disabled="index == 0"
+            v-on:click="remove(index)"
+          >
+            <v-icon>delete_outline</v-icon>
+          </v-btn>
         </v-flex>
       </v-layout>
     </v-form>
@@ -51,6 +62,7 @@
 
 <script>
 import AllocationInput from "../components/AllocationInput.vue";
+import uuidv4 from "uuid/v4";
 export default {
   name: "CategoryStock",
   computed: {
@@ -67,14 +79,30 @@ export default {
       let hasTicker = currectStock.ticker.length >= 4;
       if (!hasTicker) {
         event.preventDefault();
-        return this.$refs[`${currectStock.ticker}`][0].focus();
+        return this.$refs[`${currectStock.id}`][0].focus();
       }
       let hasAllocation = currectStock.allocation > 0;
       if (!hasAllocation) {
         event.preventDefault();
-        return this.$refs[`alllocation_${currectStock.ticker}`][0].focus();
+        return this.$refs[`allocation_${currectStock.id}`].focus();
       }
-      this.category.stocks.push({ ticker: "", allocation: "" });
+      this.category.stocks.push({
+        id: uuidv4(),
+        ticker: "",
+        allocation: "1.00"
+      });
+    },
+    remove(index) {
+      // we cant remove the first one
+      if (index > this.category.stocks.length - 1) {
+        return;
+      }
+      this.category.stocks.splice(index, 1);
+      let previous = this.category.stocks[index - 1];
+      this.$nextTick(() =>
+        this.$refs[`allocation_${previous.id}`][0].$refs["input"].focus()
+      );
+      return;
     }
   },
   data() {
@@ -89,7 +117,20 @@ export default {
       }
     };
   },
+  mounted() {
+    this.$refs[this.category.id].focus();
+  },
   props: ["category"],
   components: { AllocationInput }
 };
 </script>
+<style lang="scss">
+.v-card__title {
+  background-color: #e0f2f1;
+}
+.delete:hover {
+  .v-icon {
+    color: teal;
+  }
+}
+</style>

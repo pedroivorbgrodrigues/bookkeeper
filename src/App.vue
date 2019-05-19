@@ -28,7 +28,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .v-content {
   background-image: url("assets/background.jpg");
   background-repeat: no-repeat;

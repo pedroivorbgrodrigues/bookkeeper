@@ -22,6 +22,8 @@
 
 <script>
 import CategoryCard from "../components/CategoryCard.vue";
+import uuidv4 from "uuid/v4";
+
 export default {
   methods: {
     addCategory() {
@@ -29,10 +31,11 @@ export default {
         return;
       }
       this.categories.push({
+        id: uuidv4(),
         name: this.nameInput,
         type: "fixedIncome",
-        allocation: 1,
-        stocks: [{ ticker: "", allocation: 1 }]
+        allocation: "1.00",
+        stocks: [{ id: uuidv4(), ticker: "", allocation: "1.00" }]
       });
       this.nameInput = "";
     }
