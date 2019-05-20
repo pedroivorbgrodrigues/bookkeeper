@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-layout row justify-center>
-      <v-flex xs6>
+      <v-flex xs12 md6>
         <v-form @submit.prevent="addCategory">
           <v-text-field
             solo
@@ -13,7 +13,14 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap justify-center>
-      <v-flex xs4 v-for="category in categories" :key="category.name" px-1>
+      <v-flex
+        xs12
+        md6
+        lg4
+        v-for="category in categories"
+        :key="category.name"
+        px-1
+      >
         <category-card v-bind:category="category" />
       </v-flex>
     </v-layout>

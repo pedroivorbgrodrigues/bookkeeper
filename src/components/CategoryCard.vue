@@ -1,8 +1,8 @@
 <template>
   <v-card class="clickable">
-    <v-card-title>
-      <v-layout fill-height align-center>
-        <v-flex xs7 ma-1>
+    <v-card-title class="pa-0">
+      <v-layout fill-height my-3 ml-3 mr-1 align-center>
+        <v-flex ma-1>
           <v-text-field
             label="Category"
             :value="category.name"
@@ -10,11 +10,14 @@
             class="headline"
           ></v-text-field>
         </v-flex>
-        <v-flex xs3 text-xs-right ma-1>
+        <v-flex xs5 text-xs-right ma-1>
           <AllocationInput v-model="category.allocation" />
         </v-flex>
-        <v-flex xs2 text-xs-right ma-1>
-          <v-icon large color="teal lighten-2"> fas fa-{{ icon }} </v-icon>
+        <v-flex text-xs-right>
+          <CategoryIcon
+            v-model="category.type"
+            v-on:changeIcon="changeIcon"
+          ></CategoryIcon>
         </v-flex>
       </v-layout>
     </v-card-title>
@@ -62,14 +65,10 @@
 
 <script>
 import AllocationInput from "../components/AllocationInput.vue";
+import CategoryIcon from "../components/CategoryIcon.vue";
 import uuidv4 from "uuid/v4";
 export default {
   name: "CategoryStock",
-  computed: {
-    icon() {
-      return this.categoryIcons[this.category.type];
-    }
-  },
   methods: {
     addStock(index) {
       if (index !== this.category.stocks.length - 1) {
@@ -92,6 +91,9 @@ export default {
         allocation: "1.00"
       });
     },
+    changeIcon(type) {
+      this.category.type = type;
+    },
     remove(index) {
       // we cant remove the first one
       if (index > this.category.stocks.length - 1) {
@@ -108,9 +110,6 @@ export default {
   data() {
     return {
       form: false,
-      categoryIcons: {
-        fixedIncome: "chart-line"
-      },
       rules: {
         length: minLength => inputValue =>
           (inputValue || "").length >= minLength || `min ${minLength} chars`
@@ -121,7 +120,7 @@ export default {
     this.$refs[this.category.id].focus();
   },
   props: ["category"],
-  components: { AllocationInput }
+  components: { AllocationInput, CategoryIcon }
 };
 </script>
 <style lang="scss">
