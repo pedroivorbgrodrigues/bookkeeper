@@ -3,7 +3,9 @@ function initialState() {
     user: null,
     loading: false,
     error: null,
-    stocks: []
+    wallet: {
+      categories: []
+    }
   };
 }
 export default initialState;

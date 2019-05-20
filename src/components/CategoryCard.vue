@@ -53,7 +53,7 @@
             icon
             class="delete"
             :disabled="index == 0"
-            v-on:click="remove(index)"
+            v-on:click="remove(stock.id, index)"
           >
             <v-icon>delete_outline</v-icon>
           </v-btn>
@@ -66,10 +66,16 @@
 <script>
 import AllocationInput from "../components/AllocationInput.vue";
 import CategoryIcon from "../components/CategoryIcon.vue";
-import uuidv4 from "uuid/v4";
+import { mapMutations } from "vuex";
 export default {
   name: "CategoryStock",
+  computed: {
+    category() {
+      return this.$store.getters.category(this.categoryId);
+    }
+  },
   methods: {
+    ...mapMutations(["changeCategoryType"]),
     addStock(index) {
       if (index !== this.category.stocks.length - 1) {
         return;
@@ -85,26 +91,27 @@ export default {
         event.preventDefault();
         return this.$refs[`allocation_${currectStock.id}`].focus();
       }
-      this.category.stocks.push({
-        id: uuidv4(),
-        ticker: "",
-        allocation: "1.00"
-      });
+      this.$store.dispatch("addStock", this.categoryId);
     },
     changeIcon(type) {
-      this.category.type = type;
+      this.$store.dispatch("changeCategoryType", {
+        categoryId: this.categoryId,
+        type
+      });
     },
-    remove(index) {
+    remove(stockId, index) {
       // we cant remove the first one
       if (index > this.category.stocks.length - 1) {
         return;
       }
-      this.category.stocks.splice(index, 1);
+      this.$store.dispatch("removeStock", {
+        categoryId: this.categoryId,
+        stockId
+      });
       let previous = this.category.stocks[index - 1];
       this.$nextTick(() =>
         this.$refs[`allocation_${previous.id}`][0].$refs["input"].focus()
       );
-      return;
     }
   },
   data() {
@@ -117,9 +124,9 @@ export default {
     };
   },
   mounted() {
-    this.$refs[this.category.id].focus();
+    this.$refs[this.categoryId].focus();
   },
-  props: ["category"],
+  props: ["categoryId"],
   components: { AllocationInput, CategoryIcon }
 };
 </script>

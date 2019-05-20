@@ -21,7 +21,7 @@
         :key="category.name"
         px-1
       >
-        <category-card v-bind:category="category" />
+        <category-card v-bind:categoryId="category.id" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -29,28 +29,23 @@
 
 <script>
 import CategoryCard from "../components/CategoryCard.vue";
-import uuidv4 from "uuid/v4";
-
+import { mapGetters } from "vuex";
 export default {
+  computed: {
+    ...mapGetters(["categories"])
+  },
   methods: {
     addCategory() {
       if (this.nameInput.length == 0) {
         return;
       }
-      this.categories.push({
-        id: uuidv4(),
-        name: this.nameInput,
-        type: "fixedIncome",
-        allocation: "1.00",
-        stocks: [{ id: uuidv4(), ticker: "", allocation: "1.00" }]
-      });
+      this.$store.dispatch("addCategory", this.nameInput);
       this.nameInput = "";
     }
   },
   data() {
     return {
-      nameInput: "",
-      categories: []
+      nameInput: ""
     };
   },
   components: { CategoryCard }
