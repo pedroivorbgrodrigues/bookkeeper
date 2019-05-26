@@ -10,5 +10,11 @@ export default {
   },
   changeCategoryType({ commit }, payload) {
     commit("changeCategoryType", payload);
+  },
+  showNotification({ commit }, errorMessage) {
+    commit("showNotification", errorMessage);
+  },
+  closeNotification({ commit }) {
+    commit("closeNotification");
   }
 };

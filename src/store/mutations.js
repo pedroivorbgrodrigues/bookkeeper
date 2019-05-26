@@ -28,5 +28,13 @@ export default {
   changeCategoryType(state, { categoryId, type }) {
     let category = getCategory(state, categoryId);
     category.type = type;
+  },
+  showNotification(state, errorMessage) {
+    state.notification.text = errorMessage;
+    state.notification.snackbar = true;
+  },
+  closeNotification(state) {
+    state.notification.text = "";
+    state.notification.snackbar = false;
   }
 };

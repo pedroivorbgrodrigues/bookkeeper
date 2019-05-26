@@ -2,10 +2,11 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Wallet from "./views/Wallet.vue";
+import store from "./store/store";
 
 Vue.use(Router);
 
-export default new Router({
+let router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
@@ -27,6 +28,18 @@ export default new Router({
       // which is lazy-loaded when the route is visited.
       component: () =>
         import(/* webpackChunkName: "about" */ "./views/About.vue")
+    },
+    {
+      path: "*",
+      beforeEnter: (to, from, next) => {
+        next(new Error("You lost mate?"));
+      }
     }
   ]
 });
+router.onError(error => {
+  router.push({ name: "home" }, () =>
+    store.dispatch("showNotification", error.message)
+  );
+});
+export default router;

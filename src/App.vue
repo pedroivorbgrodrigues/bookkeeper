@@ -14,17 +14,20 @@
     <v-content>
       <router-view></router-view>
     </v-content>
+    <Notification />
   </v-app>
 </template>
 
 <script>
+import Notification from "./components/Notification";
 export default {
   name: "App",
   data() {
     return {
       //
     };
-  }
+  },
+  components: { Notification }
 };
 </script>
 
