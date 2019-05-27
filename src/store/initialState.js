@@ -1,11 +1,9 @@
 function initialState() {
   return {
-    user: null,
+    userId: null,
     loading: false,
     error: null,
-    wallet: {
-      categories: []
-    },
+    portfolio: [],
     notification: {
       snackbar: false,
       color: "error",
@@ -13,7 +11,7 @@ function initialState() {
       xposition: "right",
       yposition: "bottom",
       timeout: 2000,
-      text: "Hello, I'm a snackbar"
+      text: ""
     }
   };
 }

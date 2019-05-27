@@ -1,16 +1,24 @@
 import uuidv4 from "uuid/v4";
-const getCategory = (state, id) => {
-  return state.wallet.categories.find(category => category.id === id);
+const getCategory = (wallet, id) => {
+  return wallet.categories.find(category => category.id === id);
+};
+
+const getWallet = (state, id) => {
+  return state.portfolio.find(wallet => wallet.id === id);
 };
 
 export default {
-  addCategory(state, categoryName) {
-    state.wallet.categories.push({
-      id: uuidv4(),
-      name: categoryName,
-      type: "fixedIncome",
-      allocation: "1.00",
-      stocks: [{ id: uuidv4(), ticker: "", allocation: "1.00" }]
+  loadPortfolio(state, portfolio) {
+    state.portfolio = portfolio;
+  },
+  addWallet(state, walletObj) {
+    state.portfolio.push(walletObj);
+  },
+  addCategory(state, { walletId, categoryObj }) {
+    let wallet = getWallet(state, walletId);
+    wallet.categories.push({
+      ...categoryObj,
+      stocks: [{ ticker: "", allocation: "1.00" }]
     });
   },
   addStock(state, categoryId) {
@@ -36,5 +44,8 @@ export default {
   closeNotification(state) {
     state.notification.text = "";
     state.notification.snackbar = false;
+  },
+  setUser(state, userId) {
+    state.userId = userId;
   }
 };

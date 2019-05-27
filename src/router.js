@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Wallet from "./views/Wallet.vue";
+import Portfolio from "./views/Portfolio.vue";
 import store from "./store/store";
 
 Vue.use(Router);
@@ -19,6 +20,11 @@ let router = new Router({
       path: "/wallet",
       name: "wallet",
       component: Wallet
+    },
+    {
+      path: "/portfolio",
+      name: "portfolio",
+      component: Portfolio
     },
     {
       path: "/about",

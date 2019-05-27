@@ -35,7 +35,7 @@
         <v-flex ma-1>
           <v-text-field
             label="Ticker"
-            :ref="stock.id"
+            :ref="`stock_${index}`"
             v-model="stock.ticker"
             :rules="[rules.length(4)]"
           ></v-text-field>
@@ -44,7 +44,7 @@
           <AllocationInput
             v-model="stock.allocation"
             v-on:tab="addStock(index)"
-            :ref="`allocation_${stock.id}`"
+            :ref="`allocation_${index}`"
           />
         </v-flex>
         <v-flex>
@@ -68,7 +68,7 @@ import AllocationInput from "../components/AllocationInput.vue";
 import CategoryIcon from "../components/CategoryIcon.vue";
 import { mapMutations } from "vuex";
 export default {
-  name: "CategoryStock",
+  name: "CategoryCard",
   computed: {
     category() {
       return this.$store.getters.category(this.categoryId);
@@ -84,12 +84,12 @@ export default {
       let hasTicker = currectStock.ticker.length >= 4;
       if (!hasTicker) {
         event.preventDefault();
-        return this.$refs[`${currectStock.id}`][0].focus();
+        return this.$refs[`stock_${index}`][0].focus();
       }
       let hasAllocation = currectStock.allocation > 0;
       if (!hasAllocation) {
         event.preventDefault();
-        return this.$refs[`allocation_${currectStock.id}`].focus();
+        return this.$refs[`allocation_${index}`].focus();
       }
       this.$store.dispatch("addStock", this.categoryId);
     },
@@ -130,7 +130,7 @@ export default {
   components: { AllocationInput, CategoryIcon }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .v-card__title {
   background-color: #e0f2f1;
 }

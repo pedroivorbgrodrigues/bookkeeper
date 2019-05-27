@@ -2,8 +2,10 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Book</span>
-        <span class="font-weight-light">Keeper</span>
+        <router-link to="/" class="titleLink">
+          <span>Book</span>
+          <span class="font-weight-light">Keeper</span>
+        </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
@@ -31,11 +33,16 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .v-content {
   background-image: url("assets/background.jpg");
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: cover;
+}
+
+.titleLink {
+  color: inherit;
+  text-decoration: none;
 }
 </style>

@@ -1,6 +1,28 @@
+import firebase from "firebase";
+
+const callFunction = (functionName, payload) => {
+  let method = firebase.functions().httpsCallable(functionName);
+  return method(payload);
+};
+
 export default {
-  addCategory({ commit }, categoryName) {
-    commit("addCategory", categoryName);
+  addWallet({ commit, getters }, walletName) {
+    return callFunction("addWallet", {
+      userId: getters.userId,
+      walletName: walletName
+    }).then(result => {
+      debugger;
+      commit("addWallet", { result });
+    });
+  },
+  addCategory({ commit }, { walletId, categoryName }) {
+    return callFunction("addCategory", {
+      walletId: walletId,
+      categoryName
+    }).then(result => {
+      debugger;
+      commit("addCategory", { walletId, result });
+    });
   },
   addStock({ commit }, categoryId) {
     commit("addStock", categoryId);
@@ -16,5 +38,33 @@ export default {
   },
   closeNotification({ commit }) {
     commit("closeNotification");
+  },
+  autoSignIn({ commit }, user) {
+    if (user) {
+      commit("setUser", user.uid);
+    }
+  },
+  signIn({ commit, getters }) {
+    if (!getters.userId) {
+      return callFunction("anonSignIn").then(userId => {
+        commit("setUser", userId);
+      });
+    }
+    return Promise.resolve();
+  },
+  fetchUserData({ commit }, user) {
+    if (!user) {
+      return Promise.resolve();
+    }
+    return firebase
+      .database()
+      .ref(`users/${user.uid}/portfolio`)
+      .once("value")
+      .then(data => {
+        let wallets = data.val();
+        if (wallets) {
+          commit("loadPortfolio", wallets);
+        }
+      });
   }
 };
