@@ -1,28 +1,34 @@
 import firebase from "firebase";
 
-const callFunction = (functionName, payload) => {
-  let method = firebase.functions().httpsCallable(functionName);
-  return method(payload);
-};
+const getUserDB = userId => firebase.firestore().doc(`users/${userId}`);
+const getUserWallet = (userId, walletId) =>
+  getUserDB(userId)
+    .collection("portfolio")
+    .doc(walletId);
 
 export default {
   addWallet({ commit, getters }, walletName) {
-    return callFunction("addWallet", {
-      userId: getters.userId,
-      walletName: walletName
-    }).then(result => {
-      debugger;
-      commit("addWallet", { result });
-    });
+    let db = getUserDB(getters.user);
+    let newWallet = {
+      name: walletName
+    };
+    return db
+      .collection("portfolio")
+      .add(newWallet)
+      .then(docRef => commit("addWallet", { ...newWallet, id: docRef.id }));
   },
-  addCategory({ commit }, { walletId, categoryName }) {
-    return callFunction("addCategory", {
-      walletId: walletId,
-      categoryName
-    }).then(result => {
-      debugger;
-      commit("addCategory", { walletId, result });
-    });
+  addCategory({ commit, getters }, { walletId, categoryName }) {
+    let walletRef = getUserWallet(getters.user, walletId);
+    let newCategory = {
+      name: categoryName,
+      type: "fixedIncome",
+      allocation: "1.00",
+      stocks: [{ ticker: "", allocation: "1.00" }]
+    };
+    walletRef
+      .collection("categories")
+      .add(newCategory)
+      .then(docRef => commit("addCategory", { ...newCategory, id: docRef.id }));
   },
   addStock({ commit }, categoryId) {
     commit("addStock", categoryId);
@@ -45,26 +51,27 @@ export default {
     }
   },
   signIn({ commit, getters }) {
-    if (!getters.userId) {
-      return callFunction("anonSignIn").then(userId => {
-        commit("setUser", userId);
-      });
+    let currentUser = getters.user;
+    if (!currentUser) {
+      return firebase
+        .auth()
+        .signInAnonymously()
+        .then(userId => {
+          commit("setUser", userId);
+        });
     }
     return Promise.resolve();
   },
-  fetchUserData({ commit }, user) {
+  fetchUserData(user) {
     if (!user) {
       return Promise.resolve();
     }
-    return firebase
-      .database()
-      .ref(`users/${user.uid}/portfolio`)
-      .once("value")
-      .then(data => {
-        let wallets = data.val();
-        if (wallets) {
-          commit("loadPortfolio", wallets);
-        }
+    let db = getUserDB(user.uid);
+    return db
+      .collection("portfolio")
+      .get()
+      .then(document => {
+        console.log(document);
       });
   }
 };
