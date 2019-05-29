@@ -56,8 +56,8 @@ export default {
       return firebase
         .auth()
         .signInAnonymously()
-        .then(userId => {
-          commit("setUser", userId);
+        .then(result => {
+          commit("setUser", result.user.uid);
         });
     }
     return Promise.resolve();
