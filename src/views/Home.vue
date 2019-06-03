@@ -27,9 +27,12 @@
 export default {
   methods: {
     anonSignIn() {
-      this.$store.dispatch("signIn").then(() => {
-        this.$router.push("portfolio");
-      });
+      this.$store
+        .dispatch("signIn")
+        .then(this.$store.dispatch("createUserEntry"))
+        .then(() => {
+          this.$router.push("portfolio");
+        });
     }
   },
   data() {

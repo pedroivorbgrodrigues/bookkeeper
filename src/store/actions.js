@@ -8,7 +8,7 @@ const getUserWallet = (userId, walletId) =>
 
 export default {
   addWallet({ commit, getters }, walletName) {
-    let db = getUserDB(getters.user);
+    let db = getUserDB(getters.userId);
     let newWallet = {
       name: walletName
     };
@@ -18,7 +18,7 @@ export default {
       .then(docRef => commit("addWallet", { ...newWallet, id: docRef.id }));
   },
   addCategory({ commit, getters }, { walletId, categoryName }) {
-    let walletRef = getUserWallet(getters.user, walletId);
+    let walletRef = getUserWallet(getters.userId, walletId);
     let newCategory = {
       name: categoryName,
       type: "fixedIncome",
@@ -51,7 +51,7 @@ export default {
     }
   },
   signIn({ commit, getters }) {
-    let currentUser = getters.user;
+    let currentUser = getters.userId;
     if (!currentUser) {
       return firebase
         .auth()
@@ -62,11 +62,25 @@ export default {
     }
     return Promise.resolve();
   },
-  fetchUserData(user) {
-    if (!user) {
+  createUserEntry({ getters }) {
+    let userId = getters.userId;
+    if (!userId) {
       return Promise.resolve();
     }
-    let db = getUserDB(user.uid);
+    return firebase
+      .firestore()
+      .collection("users")
+      .doc(userId)
+      .set({
+        portfolio: []
+      });
+  },
+  fetchUserData({ getters }) {
+    let userId = getters.userId;
+    if (!userId) {
+      return Promise.resolve();
+    }
+    let db = getUserDB(userId);
     return db
       .collection("portfolio")
       .get()
